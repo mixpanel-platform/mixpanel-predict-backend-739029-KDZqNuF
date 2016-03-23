@@ -10,9 +10,6 @@
   </head>
   <body class="mixpanel-platform-body">
     <script>
-    // Set a global variable for the Custom Query result
-    var cqResults = {}
-    
     median = function( numArr ) {
       numArr = numArr.filter(Number);
       numArr.sort( function(a,b) {return a - b;} );
@@ -25,7 +22,6 @@
     
     function runQueries() {
         $('#path svg').hide()
-        
         
         structureChartData = function ( results ) {
         var A = [];
@@ -48,10 +44,13 @@
         }  
         
         // grab the Custom Query script as a string
-        var script = $('#cqLifts').html();
-        script = $.trim(script);
+        var baseline = $('#baseline').html();
+        baseline = $.trim(baseline);
 
-        MP.api.custom_query(script).done(function(results) {
+        var experiment = $('#experiment').html();
+        experiment = $.trim(experiment);
+
+        MP.api.custom_query(baseline).done(function(results) {
             cqResults = structureChartData(results);
 
             // now that we have all the results, make the table
@@ -68,7 +67,7 @@
     
   </script>
     
-  <script type="text/cq" id="cqLifts">
+  <script type="text/cq" id="baseline">
   getLift = function ( event, letter ) {
       return event.properties["lift-".concat(letter)];
     },
@@ -93,5 +92,34 @@
     })
   }
   </script>
+
+  <script type="text/cq" id="experiment">
+  getLift = function ( event, letter ) {
+      return event.properties["lift-".concat(letter)];
+    },
+  getLifts = function (item) {
+      return {A: getLift(item, "A"),
+              B: getLift(item, "B"),
+              C: getLift(item, "C"),
+              D: getLift(item, "D"),
+      };
+    };
+
+  function main() {
+      return Events({
+        to_date: new Date().toISOString().split("T")[0],
+        from_date: "2016-03-22", // new Date().toISOString().split("T")[0],
+    })
+    .filter(function(e) {
+      return e.name == "Experiment performance";
+    })
+    .map(function(event) {
+      return getLifts(event);
+    })
+  }
+  </script>
+
+
+
   </body>
 </html>
