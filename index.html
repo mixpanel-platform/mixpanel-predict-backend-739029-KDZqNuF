@@ -27,7 +27,7 @@
           }
         
         structureChartData = function ( results ) {
-          var output = {
+          var lift_map = {
             A: [],
             B: [],
             C: [],
@@ -36,13 +36,13 @@
           
           
         _.map(results, function(obj) {
-          output.A.push(obj.A);
-          output.B.push(obj.B);
-          output.C.push(obj.C);
-          output.D.push(obj.D);
+          lift_map.A.push(obj.A);
+          lift_map.B.push(obj.B);
+          lift_map.C.push(obj.C);
+          lift_map.D.push(obj.D);
           });
-          console.log(output)
-          
+        console.log(_.map(lift_map, median(lifts)));
+
         return {"Median project variance": Math.round( 10*median(results) )/10 || -1, 
                 "Count projects": results.filter(Number).length,
                 };
