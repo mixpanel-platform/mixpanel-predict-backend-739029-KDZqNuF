@@ -13,18 +13,19 @@
     // Set a global variable for the Custom Query result
     var cqResults = {}
     
+    median = function( numArr ) {
+      numArr = numArr.filter(Number);
+      numArr.sort( function(a,b) {return a - b;} );
+      var half = Math.floor(numArr.length/2);
+      if(numArr.length % 2)
+        return numArr[half];
+      else
+        return (numArr[half-1] + numArr[half]) / 2.0;
+      }
+    
     function runQueries() {
         $('#path svg').hide()
         
-        median = function( numArr ) {
-          numArr = numArr.filter(Number);
-          numArr.sort( function(a,b) {return a - b;} );
-          var half = Math.floor(numArr.length/2);
-          if(numArr.length % 2)
-            return numArr[half];
-          else
-            return (numArr[half-1] + numArr[half]) / 2.0;
-          }
         
         structureChartData = function ( results ) {
         var A = [];
@@ -38,9 +39,6 @@
           C.push(obj.C);
           D.push(obj.D);
           });
-          console.log(A[1])
-          console.log(D[1])
-
         
         return {A: Math.round( 10*median(A) )/10 || -1,
                 B: Math.round( 10*median(B) )/10 || -1,
