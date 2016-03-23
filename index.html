@@ -47,17 +47,21 @@
         var baseline = $('#baseline').html();
         baseline = $.trim(baseline);
 
+        MP.api.custom_query(baseline).done(function(results) {
+            // now that we have all the results, make the table
+            $('<div></div>').appendTo('body').MPTable({
+              data: structureChartData(results),
+              })
+        });
+
         var experiment = $('#experiment').html();
         experiment = $.trim(experiment);
 
-        MP.api.custom_query(baseline).done(function(results) {
-            cqResults = structureChartData(results);
-
+        MP.api.custom_query(experiment).done(function(results) {
             // now that we have all the results, make the table
             $('<div></div>').appendTo('body').MPTable({
-              data: cqResults,
-              firstColHeader: 'Baseline',
-            })
+              data: structureChartData(results),
+              })
         });
     }
     
