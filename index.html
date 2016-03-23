@@ -27,10 +27,10 @@
           }
         
         structureChartData = function ( results ) {
-        var A = []
-        var B = []
-        var C = []
-        var D = []
+        var A = [];
+        var B = [];
+        var C = [];
+        var D = [];
           
         _.map(results, function(obj) {
           A.push(obj.A);
@@ -57,7 +57,7 @@
             cqResults = structureChartData(results);
 
             // now that we have all the results, make the table
-            $('<div></div>').appendTo('body').MPTable({
+            $('<p>Baseline Results</p><div></div>').appendTo('body').MPTable({
               data: cqResults,
             })
         });
