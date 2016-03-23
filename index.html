@@ -91,7 +91,7 @@
         from_date: "2016-03-22", // new Date().toISOString().split("T")[0],
     })
     .filter(function(e) {
-      return e.name == "Baseline performance";
+      return e.name == "Baseline performance" && e.properties["num-users-log10"] > 3;
     })
     .map(function(event) {
       return getLifts(event);
@@ -117,7 +117,7 @@
         from_date: "2016-03-22", // new Date().toISOString().split("T")[0],
     })
     .filter(function(e) {
-      return e.name == "Experiment performance";
+      return e.name == "Experiment performance" && e.properties["num-users-log10"] > 3;
     })
     .map(function(event) {
       return getLifts(event);
