@@ -5,11 +5,93 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/css/reset.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css">
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
   </head>
   <body class="mixpanel-platform-body">
-    <h1>Hello, World!</h1>
     <script>
-      // Run queries and display results here
-    </script>
+    // Set a global variable for the Custom Query result
+    var cqResults = {}
+    
+    function runQueries() {
+        $('#path svg').hide()
+        
+        median = function( numArr ) {
+          numArr = numArr.filter(Number);
+          numArr.sort( function(a,b) {return a - b;} );
+          var half = Math.floor(numArr.length/2);
+          if(numArr.length % 2)
+            return numArr[half];
+          else
+            return (numArr[half-1] + numArr[half]) / 2.0;
+          }
+        
+        structureChartData = function ( results ) {
+          var output = {
+            A: [],
+            B: [],
+            C: [],
+            D: [],
+          }
+          
+          
+        _.map(results, function(obj) {
+          output.A.push(obj.A);
+          output.B.push(obj.B);
+          output.C.push(obj.C);
+          output.D.push(obj.D);
+          });
+          console.log(output)
+          
+        return {"Median project variance": Math.round( 10*median(results) )/10 || -1, 
+                "Count projects": results.filter(Number).length,
+                };
+        }  
+        
+        // grab the Custom Query script as a string
+        var script = $('#cqLifts').html();
+        script = $.trim(script);
+
+        MP.api.custom_query(script).done(function(results) {
+            cqResults = structureChartData(results);
+
+            // now that we have all the results, make the table
+            $('<div></div>').appendTo('body').MPTable({
+              data: cqResults,
+            })
+        });
+    }
+    
+    $(document).ready(function() {
+      runQueries()
+    });
+    
+  </script>
+    
+  <script type="text/cq" id="cqLifts">
+  getLift = function ( event, letter ) {
+      return event.properties["lift-".concat(letter)];
+    },
+  getLifts = function (item) {
+      return {A: getLift(item, "A"),
+              B: getLift(item, "B"),
+              C: getLift(item, "C"),
+              D: getLift(item, "D"),
+      };
+    };
+
+  function main() {
+      return Events({
+        to_date: new Date().toISOString().split("T")[0],
+        from_date: "2016-03-22", // new Date().toISOString().split("T")[0],
+    })
+    .filter(function(e) {
+      return e.name == "Baseline performance";
+    })
+    .map(function(event) {
+      return getLifts(event);
+    })
+  }
+  </script>
   </body>
 </html>
