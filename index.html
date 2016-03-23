@@ -57,7 +57,8 @@
             cqResults = structureChartData(results);
 
             // now that we have all the results, make the table
-            $('<p>Baseline Results</p><div></div>').appendTo('body').MPTable({
+            $('<div></div>').appendTo('body').MPTable({
+              firstColHeader: "Baseline"
               data: cqResults,
             })
         });
