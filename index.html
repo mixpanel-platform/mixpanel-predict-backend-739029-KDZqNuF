@@ -36,8 +36,7 @@
           D.push(obj.D);
           });
         
-        return {"Baseline": "",
-                A: Math.round( 10*median(A) )/10 || -1,
+        return {A: Math.round( 10*median(A) )/10 || -1,
                 B: Math.round( 10*median(B) )/10 || -1,
                 C: Math.round( 10*median(C) )/10 || -1,
                 D: Math.round( 10*median(D) )/10 || -1,
@@ -47,22 +46,24 @@
         // grab the Custom Query script as a string
         var baseline = $('#baseline').html();
         baseline = $.trim(baseline);
-
+        
+        var baselineResults
         MP.api.custom_query(baseline).done(function(results) {
-            // now that we have all the results, make the table
-            $('<div></div>').appendTo('body').MPTable({
-              data: structureChartData(results),
-              })
+          baselineResults = structureChartData(results)
         });
 
         var experiment = $('#experiment').html();
         experiment = $.trim(experiment);
 
+        var experimentResults
         MP.api.custom_query(experiment).done(function(results) {
+          experimentResults = structureChartData(results)
             // now that we have all the results, make the table
             $('<div></div>').appendTo('body').MPTable({
-              data: structureChartData(results),
-              })
+              data: {Baseline: baselineResults,
+                    Experiment: experimentResults,
+                  }
+              });
         });
     }
     
