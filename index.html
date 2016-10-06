@@ -48,7 +48,7 @@
         baseline = $.trim(baseline);
         
         var baselineResults
-        MP.api.custom_query(baseline).done(function(results) {
+        MP.api.jql(baseline).done(function(results) {
           baselineResults = structureChartData(results)
         });
 
@@ -56,7 +56,7 @@
         experiment = $.trim(experiment);
 
         var experimentResults
-        MP.api.custom_query(experiment).done(function(results) {
+        MP.api.jql(experiment).done(function(results) {
           experimentResults = structureChartData(results)
             // now that we have all the results, make the table
             $('<div></div>').appendTo('body').MPTable({
